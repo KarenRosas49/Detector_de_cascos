@@ -1,7 +1,7 @@
 import cv2
 import os
 import mediapipe as mp
-import urllib.request #para abrir y leer URL
+#import urllib.request #para abrir y leer URL
 
 url = 'http://192.168.100.26'
 

@@ -1,8 +1,9 @@
+#Se importan las librerías
 import cv2
 import os 
 import numpy as np
 
-dataPath = "C:/Users/karen/OneDrive/Documentos/CodigoIoT/Prueba_Detector_de_Casco/Dataset"
+dataPath = "/home/karen/Documents/GitHub/Detector_de_cascos/Dataset" #Especificar la ruta donde se encuentra almacenado el dataset
 dir_list = os.listdir(dataPath)
 print("Lista archivos:", dir_list)
  
