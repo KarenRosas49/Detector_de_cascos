@@ -3,9 +3,13 @@
 import cv2
 import os
 import mediapipe as mp
-#import urllib.request #para abrir y leer URL
+import urllib.request #para abrir y leer URL
+import paho.mqtt.client as mqtt
 
 url = 'http://192.168.100.26' #Se coloca el url de la esp32cam
+
+client=mqtt.Client()
+client.connect("broker.hivemq.com",1883,60)
 
 mp_face_detection = mp.solutions.face_detection #Se manda a llamar la solución de la librería mediapipe para la detección de rostros
 
@@ -17,8 +21,12 @@ face_helmet.read("modelo_cascos1.xml")
 
 #Lectura del video
 
-#cap = cv2.VideoCapture(0, cv2.CAP_DSHOW)
+#cap = cv2.VideoCapture(0, cv2.CAP_DSHOW) #Si se desea usar la cámara de la computadora, descomentar esta línea
 cap = cv2.VideoCapture(url + ":81/stream") #Se lee el url de la esp32cam
+#cap = cv2.VideoCapture("capture.mp4") #Descomentar esta l línea se se desea usar un video existente
+
+
+
 
 with mp_face_detection.FaceDetection(
      min_detection_confidence=0.5) as face_detection:
@@ -53,8 +61,9 @@ with mp_face_detection.FaceDetection(
                     result = face_helmet.predict(face_image)
                     
                     #Dibuja el rectángulo y le coloca una etiqueta
-                    if result[1] < 5700:
-                         color = (0, 255, 0) if LABELS[result[0]] == "Con_casco" else (0, 0, 255)
+                    if result[1] < 5700:                     
+                         color = (0, 255, 0) 
+                         client.publish("proyecto/parte2/detector_cascos","TRUE") if LABELS[result[0]] == "Con_casco"  else (0, 0, 255)
                          cv2.putText(frame, "{}".format(LABELS[result[0]]), (xmin, ymin - 15), 2, 1, color, 1, cv2.LINE_AA)
                          cv2.rectangle(frame, (xmin, ymin), (xmin + w, ymin + h), color, 2)
 
